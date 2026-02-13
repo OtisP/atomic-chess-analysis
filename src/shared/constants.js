@@ -174,7 +174,7 @@ const REGEX_PATTERNS = {
  */
 const EXTENSION_INFO = {
   NAME: 'Atomic to Lichess',
-  VERSION: '1.0.0',
+  VERSION: '0.9.0-beta',
   GITHUB_URL: 'https://github.com/otisp/atomic-chess-analysis',
   SUPPORT_URL: 'https://github.com/otisp/atomic-chess-analysis/issues',
 };

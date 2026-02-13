@@ -2,10 +2,12 @@
 
 **A Firefox extension to let you easily send Chess.com variant games to lichess analysis with one click**
 
+> ⚠️ **BETA VERSION** - This extension is currently in beta testing.
+
 Everything below this is a claude code overview of what this about, sorry for the slop. Reach out if you have questions.
 
 
-[![Version](https://img.shields.io/badge/version-1.0.0-green.svg)](https://github.com/otisp/atomic-chess-analysis)
+[![Version](https://img.shields.io/badge/version-0.9.0--beta-yellow.svg)](https://github.com/otisp/atomic-chess-analysis)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Firefox](https://img.shields.io/badge/Firefox-57%2B-orange.svg)](https://www.mozilla.org/firefox/)
 
@@ -24,7 +26,7 @@ Everything below this is a claude code overview of what this about, sorry for th
 
 ### From Firefox Add-ons (Recommended)
 
-*Coming soon - awaiting Mozilla review*
+*Not yet available - currently in beta testing*
 
 ### Manual Installation (Development)
 
@@ -240,7 +242,7 @@ export const LOG_CONFIG = {
 ```bash
 # Create a .xpi package
 cd atomic-chess-analysis
-zip -r atomic-to-lichess-v1.0.0.xpi * \
+zip -r atomic-to-lichess-v0.9.0-beta.xpi * \
   -x "*.git*" \
   -x "*.DS_Store" \
   -x ".claude/*"
@@ -285,7 +287,7 @@ Contributions welcome! Here's how:
 
 ## 📝 Changelog
 
-### Version 1.0.0 (2024-02-13) - Initial Release
+### Version 0.9.0-beta (2024-02-13) - Beta Release
 
 **Core Features:**
 - One-click transfer from Chess.com Atomic games to Lichess analysis
