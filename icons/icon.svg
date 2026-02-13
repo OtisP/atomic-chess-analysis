@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- Background circle -->
+  <circle cx="64" cy="64" r="60" fill="#4CAF50"/>
+
+  <!-- Atomic symbol (electron orbits) -->
+  <g stroke="white" stroke-width="3" fill="none">
+    <!-- Horizontal orbit -->
+    <ellipse cx="64" cy="64" rx="40" ry="15"/>
+    <!-- Diagonal orbit 1 -->
+    <ellipse cx="64" cy="64" rx="40" ry="15" transform="rotate(60 64 64)"/>
+    <!-- Diagonal orbit 2 -->
+    <ellipse cx="64" cy="64" rx="40" ry="15" transform="rotate(120 64 64)"/>
+  </g>
+
+  <!-- Center nucleus -->
+  <circle cx="64" cy="64" r="8" fill="white"/>
+
+  <!-- Electrons -->
+  <circle cx="104" cy="64" r="5" fill="white"/>
+  <circle cx="44" cy="85" r="5" fill="white"/>
+  <circle cx="84" cy="43" r="5" fill="white"/>
+
+  <!-- Chess piece silhouette (knight) overlaid -->
+  <path d="M 54 90 L 54 85 Q 54 80 58 78 L 60 76 Q 62 73 64 70 L 66 65 Q 68 62 70 60 L 72 58 Q 73 56 73 54 L 73 50 Q 73 48 71 47 L 69 46 Q 68 45 68 43 L 68 40 Q 70 38 72 38 L 75 38 Q 76 40 76 42 L 76 45 Q 76 48 74 50 L 72 52 Q 71 54 71 56 L 71 60 Q 71 63 69 65 L 67 68 Q 65 71 63 74 L 61 78 Q 59 81 59 85 L 59 90 Z" fill="white" opacity="0.7"/>
+</svg>
