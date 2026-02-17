@@ -144,6 +144,10 @@ function sanitizePGN(pgn) {
   // Remove excessive blank lines (more than 2)
   sanitized = sanitized.replace(/\n{3,}/g, '\n\n');
 
+  // Remove trailing move numbers with no move (e.g., "17.  0-1" → "0-1")
+  // This happens when a game ends by timeout/forfeit on a player's turn
+  sanitized = sanitized.replace(/\d+\.\s*(1-0|0-1|1\/2-1\/2|\*)/g, '$1');
+
   // Trim whitespace
   sanitized = sanitized.trim();
 
@@ -271,11 +275,26 @@ function countMoves(pgn) {
   const tokens = moves.split(/\s+/);
   let count = 0;
 
+  let inComment = false;
+
   for (const token of tokens) {
-    // Check if token is a move (not a move number or result)
+    // Handle comment blocks: skip everything between { and }
+    if (inComment) {
+      if (token.endsWith('}') || token.includes('}')) {
+        inComment = false;
+      }
+      continue;
+    }
+    if (token.startsWith('{')) {
+      if (!token.endsWith('}')) {
+        inComment = true;
+      }
+      continue;
+    }
+
+    // Check if token is a move (not a move number, result, or annotation)
     if (token && !token.endsWith('.') && !['1-0', '0-1', '1/2-1/2', '*'].includes(token)) {
-      // Skip annotations and comments
-      if (!token.startsWith('{') && !token.startsWith('(') && !token.includes('$')) {
+      if (!token.startsWith('(') && !token.includes('$')) {
         count++;
       }
     }

@@ -6,6 +6,7 @@
 // Button reference for cleanup
 let sendButton = null;
 let isProcessing = false;
+let buttonObserver = null;
 
 /**
  * Main entry point
@@ -28,8 +29,12 @@ async function initialize() {
 
     log('debug', 'Game board loaded');
 
-    // Inject the "Send to Lichess" button
+    // Inject the "Send to Lichess" button (may fall back to fixed if controls aren't ready)
     injectButton();
+
+    // Watch for moves controls to appear/change so we can inject the button
+    // into the proper location when it becomes available
+    observeMovesControls();
 
     log('info', 'Initialization complete');
   } catch (error) {
@@ -180,8 +185,11 @@ async function handleButtonClick() {
     // Update notification
     updateNotification(notificationId, LOADING_MESSAGES.OPENING_LICHESS, 'loading');
 
+    // Sanitize PGN before copying (fixes resignation/timeout comments breaking import)
+    const cleanPGN = sanitizePGN(pgn);
+
     // Copy PGN to clipboard
-    await copyToClipboard(pgn);
+    await copyToClipboard(cleanPGN);
 
     // Open Lichess in new tab
     await openLichessTab();
@@ -391,6 +399,50 @@ function updateButtonState(state) {
   }
 }
 
+/**
+ * Watch for moves controls to appear or change in the DOM.
+ * Chess.com may not have the moves controls ready when we first initialize
+ * (e.g., during a live game), and recreates them when a game ends.
+ * This observer detects those changes and injects our button.
+ */
+function observeMovesControls() {
+  // Disconnect any existing observer
+  if (buttonObserver) {
+    buttonObserver.disconnect();
+  }
+
+  // Watch document.body since the game container itself may not exist yet
+  buttonObserver = new MutationObserver(debounce(() => {
+    const buttonExists = document.querySelector('#atomic-to-lichess-btn');
+    const movesControls = document.querySelector('.moves-controls .moves-controls-row');
+
+    if (!buttonExists && movesControls) {
+      // Moves controls appeared but our button isn't in the DOM — inject it
+      log('info', 'Moves controls detected, injecting button');
+      sendButton = null;
+      injectButton();
+    } else if (!buttonExists && !movesControls) {
+      // Neither exists — nothing to do yet
+    } else if (buttonExists && movesControls && !movesControls.querySelector('#atomic-to-lichess-btn-container')) {
+      // Button exists (maybe fixed fallback) but moves controls appeared —
+      // remove the fallback and inject into the proper location
+      log('info', 'Moves controls appeared, re-injecting button into proper location');
+      if (sendButton && sendButton.parentNode) {
+        removeElement(sendButton);
+      }
+      sendButton = null;
+      injectButton();
+    }
+  }, 500));
+
+  buttonObserver.observe(document.body, {
+    childList: true,
+    subtree: true,
+  });
+
+  log('debug', 'MutationObserver set up for moves controls');
+}
+
 // Initialize when DOM is ready
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initialize);
@@ -401,6 +453,9 @@ if (document.readyState === 'loading') {
 
 // Clean up on page unload
 window.addEventListener('beforeunload', () => {
+  if (buttonObserver) {
+    buttonObserver.disconnect();
+  }
   if (sendButton) {
     removeElement(sendButton);
   }
